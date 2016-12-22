@@ -1,0 +1,132 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Project.Models.Donation>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<p><h1>บริจาคสิ่งของ</h1></p>
+<p>
+    <h2>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; หากท่านมีสิ่งของเก่าแต่ยังใช้การได้ดี หรือไม่ใช้แล้ว เช่น เสื้อผ้า เครื่องนุ่งห่ม หนังสือ เครื่องเรียน อุปกรณ์กีฬา คอมพิวเตอร์ ของใช้ต่างๆ
+    </h2>
+</p>
+<p>
+    <h2>
+        ที่ยังอยู่ในสภาพใช้การได้ดี ท่านสามารถบริจาคสิ่งของเหล่านั้น ไปยังผู้ขาดแคลนด้อยโอกาสที่มีความต้องการใช้งานผ่านทางเว็บไซต์ของเราได้
+    </h2>
+</p>
+<p>
+    <h2>
+        และสำหรับผู้ที่ขาดแคลน สามารถดูรายการสิ่งของ เพื่อขอรับบริจาคได้ทางเว็บไซต์นี้
+    </h2>
+</p>
+<p>
+    <h2>
+        <font color="red">
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *** ติดต่อบริจาคและรับสิ่งของได้ที่ ใต้หอพักชาย ตั้งแต่่เวลา 09.00 - 17.00 น. หรือติดต่อ นาย จิรายุ ชิณวงศ์ โทร. 095-0193878
+        </font>
+    </h2>
+</p>
+<br />
+@using (Html.BeginForm("Index", "Donations", FormMethod.Get))
+{
+    <p>
+        Type: @Html.DropDownList("donationType", "All")
+        Title: @Html.TextBox("searchString")
+        <!--<br />-->
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            ลำดับที่
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Fname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Lname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Facebook)
+        </th>
+        <th>
+            สถานะ
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Facebook)
+            </td>
+            <td>
+                @if(item.Number > 0)
+                {
+                    <p><font color="green">สามารถจองได้</font></p>
+                }
+                else
+                {
+                    <p><font color="red">ไม่สามารถจองได้</font></p>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Views", new
+{
+    page,
+    searchBy = Request.QueryString["searchBy"],
+    search = Request.QueryString["search"]
+}),
+    new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })

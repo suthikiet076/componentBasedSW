@@ -1,0 +1,120 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Project.Models.Donation>
+
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Donation";
+}
+
+<h1>Donation</h1>
+<p>
+    <h2>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; กด create new เพื่อเพิ่มรายละเอียดสิ่งของที่ได้รับบริจาค
+    </h2>
+</p>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Donations", FormMethod.Get))
+{
+    <p>
+        Type: @Html.DropDownList("donationType", "All")
+        Title: @Html.TextBox("searchString")
+        <!--<br />-->
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            ลำดับที่
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Fname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Lname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Facebook)
+        </th>
+        <th>
+            Rank
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Facebook)
+            </td>
+            <td>
+                @Model.Count(x => x.Fname == item.Fname && x.Lname == item.Lname)
+            </td>
+            <td>
+                <button type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> @Html.ActionLink("Edit", "Edit", new { id = item.ID })
+                </button><br />
+                <button type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span> @Html.ActionLink("Details", "Details", new { id = item.ID })
+                </button><br />
+                <button type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </button>
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page,
+    searchBy = Request.QueryString["searchBy"],
+    search = Request.QueryString["search"]
+}),
+    new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayItemSliceAndTotal = true })
